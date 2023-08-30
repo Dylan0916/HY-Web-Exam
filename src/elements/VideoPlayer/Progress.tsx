@@ -71,11 +71,13 @@ const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
 
   return (
     <SContainer>
-      <SFullProgressBar
+      <SFullProgressWrapper
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onTouchMove={onTouchMove}
-      />
+      >
+        <SFullProgressBar />
+      </SFullProgressWrapper>
       <SInProgressBar
         style={{ transform: `scaleX(${deferredVideoTimeRatio})` }}
       />
@@ -98,12 +100,17 @@ const SContainer = styled.div`
   position: absolute;
   bottom: 50px;
 `;
-const SFullProgressBar = styled.div`
+const SFullProgressWrapper = styled.div`
   ${progressBarBasicStyle};
-  background-color: white;
-  opacity: 0.34;
+  padding: 10px 0;
+  top: -10px;
   z-index: 1;
   cursor: pointer;
+`;
+const SFullProgressBar = styled.div`
+  height: 100%;
+  background-color: white;
+  opacity: 0.34;
 `;
 const SInProgressBar = styled.div`
   ${progressBarBasicStyle};
