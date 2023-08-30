@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useImperativeHandle, forwardRef } from 'react';
 import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react';
 import styled from 'styled-components';
 
@@ -7,9 +7,14 @@ interface Props {
   options?: EmblaOptionsType;
 }
 
-const Scrollable = ({ children, options = {} }: Props) => {
+export type ScrollableRef = ReturnType<typeof useEmblaCarousel>[1];
+
+const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
+  const { children, options = {} } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const isVertical = options.axis === 'y';
+
+  useImperativeHandle(ref, () => emblaApi, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -55,7 +60,7 @@ const Scrollable = ({ children, options = {} }: Props) => {
       <SEmblaContainer $isVertical={isVertical}>{children}</SEmblaContainer>
     </SEmbla>
   );
-};
+});
 
 export default Scrollable;
 
