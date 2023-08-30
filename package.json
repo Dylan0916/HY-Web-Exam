@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gumlet/react-hls-player": "^1.0.1",
     "axios": "^1.5.0",
     "embla-carousel-react": "^8.0.0-rc12",
+    "hls.js": "^1.4.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
