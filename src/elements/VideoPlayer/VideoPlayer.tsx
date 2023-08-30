@@ -7,6 +7,7 @@ import { ScrollDirection } from '@/types/common';
 import { Item } from '@/types/list';
 import { useSubscribe, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import Progress from './Progress';
+import UnmuteButton from './UnmuteButton';
 import CoverImg from './CoverImg';
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasActivated, setHasActivated] = useState(isActive);
+  const [shouldMute, setShouldMute] = useState(true);
   const playerRef = useRef<HTMLVideoElement>(null);
   const isPausedByUserRef = useRef(false);
 
@@ -36,12 +38,6 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const onReady = useCallback(() => {
     isActive && setIsPlaying(true);
   }, [isActive]);
-
-  const onUnmuteClick = () => {
-    if (playerRef.current?.muted) {
-      playerRef.current.muted = false;
-    }
-  };
 
   const onScrollableSelect = useCallback(
     (_topic, direction: ScrollDirection) => {
@@ -89,10 +85,12 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
         loop
         onClick={onClick}
         onLoadedMetadata={onReady}
-        muted
+        muted={shouldMute}
       />
       <Progress isPlaying={isPlaying} playerRef={playerRef} />
-      <SUnmuteButton onClick={onUnmuteClick}>Unmute</SUnmuteButton>
+      {shouldMute && (
+        <UnmuteButton playerRef={playerRef} setShouldMute={setShouldMute} />
+      )}
       <CoverImg src={data.cover} name={data.title} show={!hasActivated} />
     </>
   );
@@ -105,14 +103,4 @@ const SReactHlsPlayer = styled(ReactHlsPlayer)`
   height: 100%;
   min-height: 100vh;
   object-fit: cover;
-`;
-const SUnmuteButton = styled.button`
-  position: absolute;
-  top: 15px;
-  left: 10px;
-  background-color: white;
-  border: none;
-  border-radius: 3px;
-  padding: 5px 25px;
-  font-weight: 700;
 `;

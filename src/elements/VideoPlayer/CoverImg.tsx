@@ -23,5 +23,8 @@ const SCoverImg = styled.img<{ $show: boolean }>`
   left: 0;
   z-index: 1;
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transition: opacity 1s;
+  visibility: ${({ $show }) => ($show ? 'visible' : 'hidden')};
+  transition:
+    opacity 1s,
+    visibility 1s;
 `;
