@@ -19,7 +19,8 @@
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
     "styled-components": "^6.0.7",
-    "swr": "^2.2.2"
+    "swr": "^2.2.2",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/node": "^20.5.7",

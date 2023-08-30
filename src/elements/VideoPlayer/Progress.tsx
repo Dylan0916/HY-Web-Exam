@@ -8,7 +8,7 @@ import {
 } from 'react';
 import styled, { css } from 'styled-components';
 
-import { useGlobalContext } from '@/contexts/GlobalContext';
+import useGlobalStore from '@/store/globalStore';
 
 interface Props {
   isPlaying: boolean;
@@ -18,7 +18,9 @@ interface Props {
 const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
   const [videoTimeRatio, setVideoTimeRatio] = useState(0);
   const deferredVideoTimeRatio = useDeferredValue(videoTimeRatio);
-  const { isProgressBarMoving, setIsProgressBarMoving } = useGlobalContext();
+  const { isProgressBarMoving, setIsProgressBarMoving } = useGlobalStore(
+    state => state
+  );
 
   const onTouchStart = () => {
     setIsProgressBarMoving(true);

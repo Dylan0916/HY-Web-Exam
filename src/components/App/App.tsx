@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useUpdateEffect } from 'react-use';
 
 import { ScrollDirection, WatchingType } from '@/types/common';
-import { GlobalContextProvider } from '@/contexts/GlobalContext';
+import useGlobalStore from '@/store/globalStore';
 import HeaderActions from '../HeaderActions';
 import FollowingSection from '../FollowingSection';
 import ForYouSection from '../ForYouSection';
@@ -10,7 +10,9 @@ import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 
 const App = () => {
-  const [isProgressBarMoving, setIsProgressBarMoving] = useState(false);
+  const isProgressBarMoving = useGlobalStore(
+    state => state.isProgressBarMoving
+  );
   const [currentWatchingType, setCurrentWatchingType] = useState(
     WatchingType.Following
   );
@@ -55,9 +57,7 @@ const App = () => {
   }, [isProgressBarMoving]);
 
   return (
-    <GlobalContextProvider
-      value={{ isProgressBarMoving, setIsProgressBarMoving }}
-    >
+    <>
       <Scrollable ref={scrollableRef} onSelect={onScrollableSelect}>
         <FollowingSection
           isHorizontalActive={currentWatchingType === WatchingType.Following}
@@ -70,7 +70,7 @@ const App = () => {
         currentWatchingType={currentWatchingType}
         setCurrentWatchingType={setCurrentWatchingType}
       />
-    </GlobalContextProvider>
+    </>
   );
 };
 
