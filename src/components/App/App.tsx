@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
 import { useUpdateEffect } from 'react-use';
 
-import HeaderActions from '../HeaderActions';
-import VideoWrapper from '../VideoWrapper';
-import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 import { VideoType } from '@/types/common';
+import HeaderActions from '../HeaderActions';
+import FollowingSection from '../FollowingSection';
+import ForYouSection from '../ForYouSection';
+import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 
 const App = () => {
   const [currentVideoType, setCurrentVideoType] = useState(VideoType.Following);
@@ -19,8 +20,8 @@ const App = () => {
   return (
     <>
       <Scrollable ref={scrollableRef}>
-        <VideoWrapper />
-        <VideoWrapper />
+        <FollowingSection />
+        <ForYouSection />
       </Scrollable>
       <HeaderActions
         currentVideoType={currentVideoType}

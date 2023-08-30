@@ -1,25 +1,34 @@
+import { FC } from 'react';
 import styled from 'styled-components';
 
+import loadingUI from '/loading.svg';
+import { Item } from '@/types/list';
 import Scrollable from '@/elements/Scrollable';
 
 const scrollableOptions = { axis: 'y' as const };
 
-const VideoWrapper = () => {
+interface Props {
+  isLoading: boolean;
+  data?: Item[];
+}
+
+const VideoWrapper: FC<Props> = ({ isLoading, data = [] }) => {
+  if (isLoading) {
+    return (
+      <SLoadingContainer>
+        <img src={loadingUI} alt="loading..." />
+      </SLoadingContainer>
+    );
+  }
+
   return (
     <SVideoContainer>
       <Scrollable options={scrollableOptions}>
-        <SCover
-          src="https://i.pinimg.com/1200x/b2/14/e9/b214e93f2466a6f5019e02c82725bbfc.jpg"
-          alt="cover"
-        />
-        <SCover
-          src="https://i.pinimg.com/1200x/b2/14/e9/b214e93f2466a6f5019e02c82725bbfc.jpg"
-          alt="cover"
-        />
-        <SCover
-          src="https://i.pinimg.com/1200x/b2/14/e9/b214e93f2466a6f5019e02c82725bbfc.jpg"
-          alt="cover"
-        />
+        {data.map(datum => {
+          return (
+            <SCover key={datum.title} src={datum.cover} alt={datum.title} />
+          );
+        })}
       </Scrollable>
     </SVideoContainer>
   );
@@ -27,6 +36,11 @@ const VideoWrapper = () => {
 
 export default VideoWrapper;
 
+const SLoadingContainer = styled.div`
+  flex: 0 0 100%;
+  text-align: center;
+  margin: auto;
+`;
 const SVideoContainer = styled.div`
   flex: 0 0 100%;
 `;
