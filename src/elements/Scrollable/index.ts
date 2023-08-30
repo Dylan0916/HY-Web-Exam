@@ -1,2 +1,2 @@
 export { default } from './Scrollable';
-export type { ScrollableRef } from './Scrollable';
+export type { ScrollableRef, EmblaApi } from './Scrollable';

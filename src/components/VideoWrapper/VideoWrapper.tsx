@@ -1,18 +1,38 @@
-import { FC } from 'react';
+import { FC, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
 import loadingUI from '/loading.svg';
 import { Item } from '@/types/list';
-import Scrollable from '@/elements/Scrollable';
+import { ScrollDirection } from '@/types/common';
+import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
+import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
+import VideoPlayer from '@/elements/VideoPlayer';
 
 const scrollableOptions = { axis: 'y' as const };
 
 interface Props {
+  isHorizontalActive: boolean;
   isLoading: boolean;
   data?: Item[];
 }
 
-const VideoWrapper: FC<Props> = ({ isLoading, data = [] }) => {
+const VideoWrapper: FC<Props> = ({
+  isHorizontalActive,
+  isLoading,
+  data = [],
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const scrollableRef = useRef<ScrollableRef>(null);
+  const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
+
+  const onScrollableSelect = useCallback(
+    (emblaApi: NonNullable<EmblaApi>) => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      scrollDirectionPublisher(ScrollDirection.Vertical);
+    },
+    [scrollDirectionPublisher]
+  );
+
   if (isLoading) {
     return (
       <SLoadingContainer>
@@ -23,10 +43,18 @@ const VideoWrapper: FC<Props> = ({ isLoading, data = [] }) => {
 
   return (
     <SVideoContainer>
-      <Scrollable options={scrollableOptions}>
-        {data.map(datum => {
+      <Scrollable
+        ref={scrollableRef}
+        options={scrollableOptions}
+        onSelect={onScrollableSelect}
+      >
+        {data.map((datum, index) => {
+          const isActive = isHorizontalActive && index === selectedIndex;
+
           return (
-            <SCover key={datum.title} src={datum.cover} alt={datum.title} />
+            <SVideoContent key={datum.title}>
+              <VideoPlayer data={datum} isActive={isActive} />
+            </SVideoContent>
           );
         })}
       </Scrollable>
@@ -44,9 +72,6 @@ const SLoadingContainer = styled.div`
 const SVideoContainer = styled.div`
   flex: 0 0 100%;
 `;
-const SCover = styled.img`
-  width: 100%;
-  height: 100%;
+const SVideoContent = styled.div`
   min-height: 100vh;
-  object-fit: cover;
 `;

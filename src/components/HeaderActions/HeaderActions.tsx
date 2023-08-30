@@ -1,32 +1,32 @@
 import { Dispatch, SetStateAction, FC } from 'react';
 import styled from 'styled-components';
 
-import { VideoType } from '@/types/common';
+import { WatchingType } from '@/types/common';
 
 interface Props {
-  currentVideoType: VideoType;
-  setCurrentVideoType: Dispatch<SetStateAction<VideoType>>;
+  currentWatchingType: WatchingType;
+  setCurrentWatchingType: Dispatch<SetStateAction<WatchingType>>;
 }
 
 const HeaderActions: FC<Props> = ({
-  currentVideoType,
-  setCurrentVideoType,
+  currentWatchingType,
+  setCurrentWatchingType,
 }) => {
-  const onClick = (type: VideoType) => {
-    setCurrentVideoType(type);
+  const onClick = (type: WatchingType) => {
+    setCurrentWatchingType(type);
   };
 
   return (
     <SContainer>
       <SText
-        $isActive={currentVideoType === VideoType.Following}
-        onClick={() => onClick(VideoType.Following)}
+        $isActive={currentWatchingType === WatchingType.Following}
+        onClick={() => onClick(WatchingType.Following)}
       >
         Following
       </SText>
       <SText
-        $isActive={currentVideoType === VideoType.ForYou}
-        onClick={() => onClick(VideoType.ForYou)}
+        $isActive={currentWatchingType === WatchingType.ForYou}
+        onClick={() => onClick(WatchingType.ForYou)}
       >
         For You
       </SText>

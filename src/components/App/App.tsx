@@ -1,23 +1,35 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useUpdateEffect } from 'react-use';
 
-import { VideoType } from '@/types/common';
+import { ScrollDirection, WatchingType } from '@/types/common';
 import { GlobalContextProvider } from '@/contexts/GlobalContext';
 import HeaderActions from '../HeaderActions';
 import FollowingSection from '../FollowingSection';
 import ForYouSection from '../ForYouSection';
-import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
+import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
+import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 
 const App = () => {
   const [isProgressBarMoving, setIsProgressBarMoving] = useState(false);
-  const [currentVideoType, setCurrentVideoType] = useState(VideoType.Following);
+  const [currentWatchingType, setCurrentWatchingType] = useState(
+    WatchingType.Following
+  );
   const scrollableRef = useRef<ScrollableRef>(null);
+  const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
+
+  const onScrollableSelect = useCallback(
+    (emblaApi: NonNullable<EmblaApi>) => {
+      setCurrentWatchingType(emblaApi.selectedScrollSnap());
+      scrollDirectionPublisher(ScrollDirection.Horizontal);
+    },
+    [scrollDirectionPublisher]
+  );
 
   useUpdateEffect(() => {
     if (!scrollableRef.current) return;
 
-    scrollableRef.current.scrollTo(currentVideoType);
-  }, [currentVideoType]);
+    scrollableRef.current.scrollTo(currentWatchingType);
+  }, [currentWatchingType]);
 
   useUpdateEffect(() => {
     if (!scrollableRef.current) return;
@@ -46,13 +58,17 @@ const App = () => {
     <GlobalContextProvider
       value={{ isProgressBarMoving, setIsProgressBarMoving }}
     >
-      <Scrollable ref={scrollableRef}>
-        <FollowingSection />
-        <ForYouSection />
+      <Scrollable ref={scrollableRef} onSelect={onScrollableSelect}>
+        <FollowingSection
+          isHorizontalActive={currentWatchingType === WatchingType.Following}
+        />
+        <ForYouSection
+          isHorizontalActive={currentWatchingType === WatchingType.ForYou}
+        />
       </Scrollable>
       <HeaderActions
-        currentVideoType={currentVideoType}
-        setCurrentVideoType={setCurrentVideoType}
+        currentWatchingType={currentWatchingType}
+        setCurrentWatchingType={setCurrentWatchingType}
       />
     </GlobalContextProvider>
   );

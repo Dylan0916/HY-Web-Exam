@@ -5,12 +5,14 @@ import styled from 'styled-components';
 interface Props {
   children: ReactNode;
   options?: EmblaOptionsType;
+  onSelect?: (e: NonNullable<EmblaApi>) => void;
 }
 
-export type ScrollableRef = ReturnType<typeof useEmblaCarousel>[1];
+export type EmblaApi = ReturnType<typeof useEmblaCarousel>[1];
+export type ScrollableRef = EmblaApi;
 
 const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
-  const { children, options = {} } = props;
+  const { children, options = {}, onSelect } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const isVertical = options.axis === 'y';
 
@@ -53,7 +55,11 @@ const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
     };
 
     emblaApi.on('scroll', preventEdgeScrolling);
-  }, [emblaApi]);
+
+    if (onSelect) {
+      emblaApi.on('select', onSelect);
+    }
+  }, [emblaApi, onSelect]);
 
   return (
     <SEmbla ref={emblaRef}>

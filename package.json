@@ -14,6 +14,7 @@
     "axios": "^1.5.0",
     "embla-carousel-react": "^8.0.0-rc12",
     "hls.js": "^1.4.10",
+    "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.5.7",
+    "@types/pubsub-js": "^1.8.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
