@@ -29,11 +29,11 @@ const VideoPlayer: FC<Props> = ({ src }) => {
     setIsPlaying(true);
   }, []);
 
-  const onUnmuteClick = useCallback(() => {
+  const onUnmuteClick = () => {
     if (playerRef.current?.muted) {
       playerRef.current.muted = false;
     }
-  }, []);
+  };
 
   useUpdateEffect(() => {
     if (isPlaying) {
@@ -54,9 +54,9 @@ const VideoPlayer: FC<Props> = ({ src }) => {
         muted
       />
       <Progress isPlaying={isPlaying} playerRef={playerRef} />
-      <button style={{ position: 'absolute' }} onClick={onUnmuteClick}>
+      <SUnmuteButton style={{ position: 'absolute' }} onClick={onUnmuteClick}>
         Unmute
-      </button>
+      </SUnmuteButton>
     </>
   );
 };
@@ -68,4 +68,14 @@ const SReactHlsPlayer = styled(ReactHlsPlayer)`
   height: 100%;
   min-height: 100vh;
   object-fit: cover;
+`;
+const SUnmuteButton = styled.button`
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 25px;
+  font-weight: 700;
 `;
