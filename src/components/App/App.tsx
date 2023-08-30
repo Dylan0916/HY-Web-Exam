@@ -1,5 +1,5 @@
 import VideoWrapper from '../VideoWrapper';
-import Scrollable from '../../elements/Scrollable';
+import Scrollable from '@/elements/Scrollable';
 
 const App = () => {
   return (

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import Scrollable from '../../elements/Scrollable';
+import Scrollable from '@/elements/Scrollable';
 
 const scrollableOptions = { axis: 'y' as const };
 
