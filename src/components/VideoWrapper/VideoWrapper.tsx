@@ -5,6 +5,7 @@ import loadingUI from '/loading.svg';
 import { Item } from '@/types/list';
 import { ScrollDirection } from '@/types/common';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
+import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
 import VideoPlayer from '@/elements/VideoPlayer';
 
@@ -32,6 +33,8 @@ const VideoWrapper: FC<Props> = ({
     },
     [scrollDirectionPublisher]
   );
+
+  usePreventScrolling({ scrollableRef });
 
   if (isLoading) {
     return (

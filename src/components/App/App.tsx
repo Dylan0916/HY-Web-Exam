@@ -2,17 +2,15 @@ import { useState, useRef, useCallback } from 'react';
 import { useUpdateEffect } from 'react-use';
 
 import { ScrollDirection, WatchingType } from '@/types/common';
-import useGlobalStore, {
-  isProgressBarMovingSelector,
-} from '@/store/globalStore';
-import ForYouSection from '../ForYouSection';
+
 import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
+import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
+import ForYouSection from '../ForYouSection';
 import HeaderActions from '../HeaderActions';
 import FollowingSection from '../FollowingSection';
 
 const App = () => {
-  const isProgressBarMoving = useGlobalStore(isProgressBarMovingSelector);
   const [currentWatchingType, setCurrentWatchingType] = useState(
     WatchingType.Following
   );
@@ -27,34 +25,13 @@ const App = () => {
     [scrollDirectionPublisher]
   );
 
+  usePreventScrolling({ scrollableRef });
+
   useUpdateEffect(() => {
     if (!scrollableRef.current) return;
 
     scrollableRef.current.scrollTo(currentWatchingType);
   }, [currentWatchingType]);
-
-  useUpdateEffect(() => {
-    if (!scrollableRef.current) return;
-
-    const preventScrolling = () => {
-      const { target, translate } = scrollableRef.current!.internalEngine();
-
-      target.set(0);
-      translate.toggleActive(false);
-    };
-
-    if (isProgressBarMoving) {
-      scrollableRef.current.on('scroll', preventScrolling);
-    } else {
-      scrollableRef.current.off('scroll', preventScrolling);
-    }
-
-    return () => {
-      if (scrollableRef.current) {
-        scrollableRef.current.off('scroll', preventScrolling);
-      }
-    };
-  }, [isProgressBarMoving]);
 
   return (
     <>
