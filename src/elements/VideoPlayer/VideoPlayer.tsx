@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useCallback } from 'react';
+import { FC, useState, useRef, useCallback, startTransition } from 'react';
 import { useUpdateEffect } from 'react-use';
 import ReactHlsPlayer from '@gumlet/react-hls-player';
 import styled from 'styled-components';
@@ -27,7 +27,9 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const { closeMute } = useMute();
 
   const playVideo = useCallback(() => {
-    playerRef.current?.play();
+    startTransition(() => {
+      playerRef.current?.play();
+    });
   }, []);
 
   const pauseVideo = useCallback(() => {
