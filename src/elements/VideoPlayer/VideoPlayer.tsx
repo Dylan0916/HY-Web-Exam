@@ -89,7 +89,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
         src={hasActivated ? data.play_url : ''}
         loop
         onClick={onClick}
-        onLoadedMetadata={onReady}
+        onLoadedData={onReady}
         muted={shouldMute}
       />
       <Progress isPlaying={isPlaying} playerRef={playerRef} />
