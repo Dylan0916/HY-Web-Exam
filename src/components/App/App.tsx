@@ -7,16 +7,15 @@ import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Loading from '@/elements/Loading';
-// import ForYouSection from '../ForYouSection';
+import ForYouSection from '../ForYouSection';
 import HeaderActions from '../HeaderActions';
-import FollowingSection from '../FollowingSection';
 
-const ForYouSection = lazy(() => import('../ForYouSection'));
+const FollowingSection = lazy(() => import('../FollowingSection'));
+const startIndex = WatchingType.ForYou;
+const scrollableOptions = { startIndex };
 
 const App = () => {
-  const [currentWatchingType, setCurrentWatchingType] = useState(
-    WatchingType.Following
-  );
+  const [currentWatchingType, setCurrentWatchingType] = useState(startIndex);
   const scrollableRef = useRef<ScrollableRef>(null);
   const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
 
@@ -35,15 +34,19 @@ const App = () => {
 
   return (
     <>
-      <Scrollable ref={scrollableRef} onSelect={onScrollableSelect}>
-        <FollowingSection
-          isHorizontalActive={currentWatchingType === WatchingType.Following}
-        />
+      <Scrollable
+        ref={scrollableRef}
+        options={scrollableOptions}
+        onSelect={onScrollableSelect}
+      >
         <Suspense fallback={<Loading />}>
-          <ForYouSection
-            isHorizontalActive={currentWatchingType === WatchingType.ForYou}
+          <FollowingSection
+            isHorizontalActive={currentWatchingType === WatchingType.Following}
           />
         </Suspense>
+        <ForYouSection
+          isHorizontalActive={currentWatchingType === WatchingType.ForYou}
+        />
       </Scrollable>
       <HeaderActions
         currentWatchingType={currentWatchingType}
