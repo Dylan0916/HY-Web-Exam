@@ -8,18 +8,21 @@ import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 import VideoPlayer from '@/elements/VideoPlayer';
 import Loading from './Loading';
+import Error from './Error';
 
 const scrollableOptions = { axis: 'y' as const };
 
 interface Props {
   isHorizontalActive: boolean;
   isLoading: boolean;
+  error: unknown;
   data?: Item[];
 }
 
 const VideoWrapper: FC<Props> = ({
   isHorizontalActive,
   isLoading,
+  error,
   data = [],
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -34,6 +37,7 @@ const VideoWrapper: FC<Props> = ({
   usePreventScrolling({ scrollableRef });
 
   if (isLoading) return <Loading />;
+  if (error) return <Error />;
 
   return (
     <SVideoContainer>

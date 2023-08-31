@@ -11,15 +11,14 @@ interface Props {
 }
 
 const FollowingSection: FC<Props> = ({ isHorizontalActive }) => {
-  const { data, isLoading } = useSWR<List>(FOLLOWING_LIST_URL, get);
-
-  // @TODO: handle error
+  const { data, isLoading, error } = useSWR<List>(FOLLOWING_LIST_URL, get);
 
   return (
     <VideoWrapper
       isHorizontalActive={isHorizontalActive}
       isLoading={!data && isLoading}
       data={data?.items}
+      error={error}
     />
   );
 };
