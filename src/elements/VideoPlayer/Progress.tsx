@@ -79,24 +79,36 @@ const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onTouchMove={onTouchMove}
+        $isProgressBarMoving={isProgressBarMoving}
       >
         <SFullProgressBar />
       </SFullProgressWrapper>
       <SInProgressBar
+        $isProgressBarMoving={isProgressBarMoving}
         style={{ transform: `scaleX(${deferredVideoTimeRatio})` }}
       />
-      <SProgressCircle style={{ left: `${deferredVideoTimeRatio * 100}%` }} />
+      <SProgressCircle
+        $isProgressBarMoving={isProgressBarMoving}
+        style={{ left: `${deferredVideoTimeRatio * 100}%` }}
+      />
     </SContainer>
   );
 };
 
 export default Progress;
 
-const progressBarBasicStyle = css`
+const PROGRESS_BAR_STYLE = {
+  HEIGHT: 4,
+  HEIGHT_WITH_MOVING: 6,
+};
+const progressBarBasicStyle = ({ $isProgressBarMoving }) => css`
   position: absolute;
   top: 0;
   width: 100%;
-  height: 4px;
+  height: ${$isProgressBarMoving
+    ? PROGRESS_BAR_STYLE.HEIGHT_WITH_MOVING
+    : PROGRESS_BAR_STYLE.HEIGHT}px;
+  transition: height 0.3s;
 `;
 
 const SContainer = styled.div`
@@ -104,7 +116,7 @@ const SContainer = styled.div`
   position: absolute;
   bottom: 50px;
 `;
-const SFullProgressWrapper = styled.div`
+const SFullProgressWrapper = styled.div<{ $isProgressBarMoving: boolean }>`
   ${progressBarBasicStyle};
   padding: 10px 0;
   top: -10px;
@@ -116,16 +128,18 @@ const SFullProgressBar = styled.div`
   background-color: white;
   opacity: 0.34;
 `;
-const SInProgressBar = styled.div`
+const SInProgressBar = styled.div<{ $isProgressBarMoving: boolean }>`
   ${progressBarBasicStyle};
   background-color: white;
   transform-origin: left;
 `;
-const SProgressCircle = styled.div`
+const SProgressCircle = styled.div<{ $isProgressBarMoving: boolean }>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background-color: white;
   position: absolute;
-  top: -4px;
+  transform: ${({ $isProgressBarMoving }) =>
+    $isProgressBarMoving ? 'translateY(-3px)' : 'translateY(-4px)'};
+  transition: transform 0.3s;
 `;

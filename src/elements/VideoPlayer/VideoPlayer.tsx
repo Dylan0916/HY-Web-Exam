@@ -10,6 +10,7 @@ import { useSubscribe, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import useMute from '@/hooks/useMute';
 import Progress from './Progress';
 import UnmuteButton from './UnmuteButton';
+import PauseUI from './PauseUI';
 import CoverImg from './CoverImg';
 
 interface Props {
@@ -93,6 +94,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
       />
       <Progress isPlaying={isPlaying} playerRef={playerRef} />
       {shouldMute && <UnmuteButton playerRef={playerRef} />}
+      {!isPlaying && <PauseUI onClick={onClick} />}
       <CoverImg src={data.cover} name={data.title} show={!hasActivated} />
     </>
   );
