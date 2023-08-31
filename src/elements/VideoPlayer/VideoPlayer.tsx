@@ -28,9 +28,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const { closeMute } = useMute();
 
   const playVideo = useCallback(() => {
-    startTransition(() => {
-      playerRef.current?.play();
-    });
+    playerRef.current?.play();
   }, []);
 
   const pauseVideo = useCallback(() => {
@@ -44,7 +42,9 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   }, [closeMute]);
 
   const onReady = useCallback(() => {
-    isActive && setIsPlaying(true);
+    startTransition(() => {
+      isActive && setIsPlaying(true);
+    });
     setHasReady(true);
   }, [isActive]);
 
@@ -52,20 +52,22 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
     (_topic, direction: ScrollDirection) => {
       const isScrollVertical = direction === ScrollDirection.Vertical;
 
-      if (isActive) {
-        if (isScrollVertical) {
-          setIsPlaying(true);
-        } else if (!isPausedByUserRef.current) {
-          setIsPlaying(true);
+      startTransition(() => {
+        if (isActive) {
+          if (isScrollVertical) {
+            setIsPlaying(true);
+          } else if (!isPausedByUserRef.current) {
+            setIsPlaying(true);
+          }
+          return;
         }
-        return;
-      }
 
-      setIsPlaying(false);
+        setIsPlaying(false);
 
-      if (isScrollVertical && playerRef.current) {
-        playerRef.current.currentTime = 0;
-      }
+        if (isScrollVertical && playerRef.current) {
+          playerRef.current.currentTime = 0;
+        }
+      });
     },
     [isActive]
   );
