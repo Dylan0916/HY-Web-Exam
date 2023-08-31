@@ -5,7 +5,7 @@ import { Item } from '@/types/list';
 import { ScrollDirection } from '@/types/common';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
-import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
+import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 import VideoPlayer from '@/elements/VideoPlayer';
 import Loading from './Loading';
 
@@ -26,13 +26,10 @@ const VideoWrapper: FC<Props> = ({
   const scrollableRef = useRef<ScrollableRef>(null);
   const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
 
-  const onScrollableSelect = useCallback(
-    (emblaApi: NonNullable<EmblaApi>) => {
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-      scrollDirectionPublisher(ScrollDirection.Vertical);
-    },
-    [scrollDirectionPublisher]
-  );
+  const onScrollableSelect = useCallback(() => {
+    setSelectedIndex(scrollableRef.current!.selectedScrollSnap());
+    scrollDirectionPublisher(ScrollDirection.Vertical);
+  }, [scrollDirectionPublisher]);
 
   usePreventScrolling({ scrollableRef });
 

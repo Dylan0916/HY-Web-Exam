@@ -18,11 +18,10 @@ export const usePreventScrolling = ({
   useUpdateEffect(() => {
     if (!scrollableRef.current) return;
 
+    const { target, translate, limit } = scrollableRef.current.internalEngine();
+
     const preventScrolling = () => {
       if (!scrollableRef.current) return;
-
-      const { target, translate, limit } =
-        scrollableRef.current.internalEngine();
 
       const isFirst =
         !scrollableRef.current.canScrollPrev() &&
@@ -46,11 +45,13 @@ export const usePreventScrolling = ({
     if (isProgressBarMoving) {
       scrollableRef.current.on('scroll', preventScrolling);
     } else {
+      translate.toggleActive(true);
       scrollableRef.current.off('scroll', preventScrolling);
     }
 
     return () => {
       if (scrollableRef.current) {
+        translate.toggleActive(true);
         scrollableRef.current.off('scroll', preventScrolling);
       }
     };

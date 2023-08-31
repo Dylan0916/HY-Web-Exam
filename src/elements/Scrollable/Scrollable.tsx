@@ -1,5 +1,8 @@
 import { ReactNode, useEffect, useImperativeHandle, forwardRef } from 'react';
-import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react';
+import useEmblaCarousel, {
+  EmblaOptionsType,
+  EmblaEventType,
+} from 'embla-carousel-react';
 import styled from 'styled-components';
 
 import useMute from '@/hooks/useMute';
@@ -7,7 +10,7 @@ import useMute from '@/hooks/useMute';
 interface Props {
   children: ReactNode;
   options?: EmblaOptionsType;
-  onSelect?: (e: NonNullable<EmblaApi>) => void;
+  onSelect?: (eventType: EmblaEventType) => void;
 }
 
 export type EmblaApi = ReturnType<typeof useEmblaCarousel>[1];
@@ -25,35 +28,17 @@ const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
     if (!emblaApi) return;
 
     const preventEdgeScrolling = () => {
-      const {
-        limit,
-        target,
-        location,
-        offsetLocation,
-        scrollTo,
-        translate,
-        scrollBody,
-      } = emblaApi.internalEngine();
+      const { limit, target, location, scrollTo } = emblaApi.internalEngine();
 
-      let edge: number | null = null;
-
-      if (limit.reachedMax(location.get())) {
-        edge = limit.max;
-      }
-      if (limit.reachedMin(location.get())) {
-        edge = limit.min;
-      }
-
-      if (edge !== null) {
-        offsetLocation.set(edge);
-        location.set(edge);
-        target.set(edge);
-        translate.to(edge);
-        translate.toggleActive(false);
-        scrollBody.useDuration(0).useFriction(0);
+      if (limit.reachedMax(target.get())) {
+        if (limit.reachedMax(location.get())) location.set(limit.max);
+        target.set(limit.max);
         scrollTo.distance(0, false);
-      } else {
-        translate.toggleActive(true);
+      }
+      if (limit.reachedMin(target.get())) {
+        if (limit.reachedMin(location.get())) location.set(limit.min);
+        target.set(limit.min);
+        scrollTo.distance(0, false);
       }
     };
     const handleScroll = () => {
