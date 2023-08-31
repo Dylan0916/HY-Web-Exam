@@ -90,7 +90,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
     <>
       <SReactHlsPlayer
         playerRef={playerRef}
-        src={data.play_url}
+        src={hasActivated ? data.play_url : ''}
         loop
         playsInline
         onClick={onClick}
