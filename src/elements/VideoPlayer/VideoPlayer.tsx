@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useCallback, startTransition } from 'react';
+import { FC, useState, useRef, useCallback } from 'react';
 import { useUpdateEffect } from 'react-use';
 import ReactHlsPlayer from '@gumlet/react-hls-player';
 import styled from 'styled-components';
@@ -18,6 +18,8 @@ interface Props {
   isActive: boolean;
 }
 
+const VIDEO_PLAY_DELAY_MS = 400;
+
 const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasActivated, setHasActivated] = useState(isActive);
@@ -34,6 +36,11 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
     playerRef.current?.pause();
   }, []);
 
+  // perf: in order to prevent the video play and the carousel from occupying the main thread and causing frame drop
+  const handleDelayedProcess = useCallback((cb: () => void, time) => {
+    setTimeout(cb, time);
+  }, []);
+
   const onClick = useCallback(() => {
     setIsPlaying(prevIsPlaying => !prevIsPlaying);
     isPausedByUserRef.current = !isPausedByUserRef.current;
@@ -41,33 +48,33 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   }, [closeMute]);
 
   const onReady = useCallback(() => {
-    startTransition(() => {
+    handleDelayedProcess(() => {
       isActive && setIsPlaying(true);
-    });
-  }, [isActive]);
+    }, VIDEO_PLAY_DELAY_MS);
+  }, [isActive, handleDelayedProcess]);
 
   const onScrollableSelect = useCallback(
     (_topic, direction: ScrollDirection) => {
       const isScrollVertical = direction === ScrollDirection.Vertical;
 
-      startTransition(() => {
-        if (isActive) {
+      if (isActive) {
+        handleDelayedProcess(() => {
           if (isScrollVertical) {
             setIsPlaying(true);
           } else if (!isPausedByUserRef.current) {
             setIsPlaying(true);
           }
-          return;
-        }
+        }, VIDEO_PLAY_DELAY_MS);
+        return;
+      }
 
-        setIsPlaying(false);
+      setIsPlaying(false);
 
-        if (isScrollVertical && playerRef.current) {
-          playerRef.current.currentTime = 0;
-        }
-      });
+      if (isScrollVertical && playerRef.current) {
+        playerRef.current.currentTime = 0;
+      }
     },
-    [isActive]
+    [isActive, handleDelayedProcess]
   );
 
   useSubscribe(SCROLL_DIRECTION, onScrollableSelect);
