@@ -2,17 +2,17 @@ import { useState, useRef, useCallback } from 'react';
 import { useUpdateEffect } from 'react-use';
 
 import { ScrollDirection, WatchingType } from '@/types/common';
-import useGlobalStore from '@/store/globalStore';
-import HeaderActions from '../HeaderActions';
-import FollowingSection from '../FollowingSection';
+import useGlobalStore, {
+  isProgressBarMovingSelector,
+} from '@/store/globalStore';
 import ForYouSection from '../ForYouSection';
 import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
+import HeaderActions from '../HeaderActions';
+import FollowingSection from '../FollowingSection';
 
 const App = () => {
-  const isProgressBarMoving = useGlobalStore(
-    state => state.isProgressBarMoving
-  );
+  const isProgressBarMoving = useGlobalStore(isProgressBarMovingSelector);
   const [currentWatchingType, setCurrentWatchingType] = useState(
     WatchingType.Following
   );

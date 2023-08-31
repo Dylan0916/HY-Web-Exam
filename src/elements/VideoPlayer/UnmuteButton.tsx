@@ -1,12 +1,15 @@
-import { FC, RefObject, Dispatch, SetStateAction } from 'react';
+import { FC, RefObject } from 'react';
 import styled from 'styled-components';
+
+import useGlobalStore, { setShouldMuteSelector } from '@/store/globalStore';
 
 interface Props {
   playerRef: RefObject<HTMLVideoElement>;
-  setShouldMute: Dispatch<SetStateAction<boolean>>;
 }
 
-const UnmuteButton: FC<Props> = ({ playerRef, setShouldMute }) => {
+const UnmuteButton: FC<Props> = ({ playerRef }) => {
+  const setShouldMute = useGlobalStore(setShouldMuteSelector);
+
   const onClick = () => {
     if (playerRef.current?.muted) {
       playerRef.current.muted = false;

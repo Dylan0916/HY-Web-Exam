@@ -8,7 +8,8 @@ import {
 } from 'react';
 import styled, { css } from 'styled-components';
 
-import useGlobalStore from '@/store/globalStore';
+import useGlobalStore, { stateSelector } from '@/store/globalStore';
+import useMute from '@/hooks/useMute';
 
 interface Props {
   isPlaying: boolean;
@@ -18,12 +19,13 @@ interface Props {
 const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
   const [videoTimeRatio, setVideoTimeRatio] = useState(0);
   const deferredVideoTimeRatio = useDeferredValue(videoTimeRatio);
-  const { isProgressBarMoving, setIsProgressBarMoving } = useGlobalStore(
-    state => state
-  );
+  const { isProgressBarMoving, setIsProgressBarMoving } =
+    useGlobalStore(stateSelector);
+  const { closeMute } = useMute();
 
   const onTouchStart = () => {
     setIsProgressBarMoving(true);
+    closeMute();
   };
 
   const onTouchEnd = () => {
