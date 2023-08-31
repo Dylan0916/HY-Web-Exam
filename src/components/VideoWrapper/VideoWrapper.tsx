@@ -1,13 +1,13 @@
 import { FC, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 
-import loadingUI from '/loading.svg';
 import { Item } from '@/types/list';
 import { ScrollDirection } from '@/types/common';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Scrollable, { ScrollableRef, EmblaApi } from '@/elements/Scrollable';
 import VideoPlayer from '@/elements/VideoPlayer';
+import Loading from './Loading';
 
 const scrollableOptions = { axis: 'y' as const };
 
@@ -36,13 +36,7 @@ const VideoWrapper: FC<Props> = ({
 
   usePreventScrolling({ scrollableRef });
 
-  if (isLoading) {
-    return (
-      <SLoadingContainer>
-        <img src={loadingUI} alt="loading..." />
-      </SLoadingContainer>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <SVideoContainer>
@@ -67,11 +61,6 @@ const VideoWrapper: FC<Props> = ({
 
 export default VideoWrapper;
 
-const SLoadingContainer = styled.div`
-  flex: 0 0 100%;
-  text-align: center;
-  margin: auto;
-`;
 const SVideoContainer = styled.div`
   flex: 0 0 100%;
 `;
