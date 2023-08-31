@@ -20,7 +20,7 @@ describe('useMute', () => {
     jest.clearAllMocks();
   });
 
-  it('should do nothing if "shouldMute" is false', () => {
+  it('should do nothing if "shouldMute" is false when call closeMute', () => {
     mockUseGlobalStore({ shouldMute: false, setShouldMute: mockSetShouldMute });
 
     const { result } = createHook();
@@ -30,7 +30,7 @@ describe('useMute', () => {
     expect(mockSetShouldMute).not.toBeCalled();
   });
 
-  it('should call setShouldMute with false if "shouldMute" is true', () => {
+  it('should call setShouldMute with false if "shouldMute" is true when call closeMute', () => {
     mockUseGlobalStore({ shouldMute: true, setShouldMute: mockSetShouldMute });
 
     const { result } = createHook();
