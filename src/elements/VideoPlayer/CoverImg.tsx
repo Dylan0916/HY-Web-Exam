@@ -1,13 +1,38 @@
-import { FC } from 'react';
+import { FC, useState, useEffect, RefObject } from 'react';
 import styled from 'styled-components';
 
 interface Props {
   src: string;
   name: string;
-  show: boolean;
+  isActive: boolean;
+  playerRef: RefObject<HTMLVideoElement>;
 }
 
-const CoverImg: FC<Props> = ({ src, name, show }) => {
+const CoverImg: FC<Props> = ({ src, name, isActive, playerRef }) => {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    if (!isActive || !show || !playerRef.current) return;
+
+    const timer = setInterval(() => {
+      if (!playerRef.current) return;
+
+      const { currentTime, paused, ended, readyState } = playerRef.current;
+
+      const isVideoReady =
+        currentTime > 0 && !paused && !ended && readyState > 2;
+
+      if (isVideoReady) {
+        setShow(false);
+        clearInterval(timer);
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isActive, show]);
+
   return <SCoverImg src={src} alt={name} $show={show} />;
 };
 
