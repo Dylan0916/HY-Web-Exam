@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, Suspense, lazy } from 'react';
 import { useUpdateEffect } from 'react-use';
 
 import { ScrollDirection, WatchingType } from '@/types/common';
@@ -6,9 +6,12 @@ import { ScrollDirection, WatchingType } from '@/types/common';
 import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
-import ForYouSection from '../ForYouSection';
+import Loading from '@/elements/Loading';
+// import ForYouSection from '../ForYouSection';
 import HeaderActions from '../HeaderActions';
 import FollowingSection from '../FollowingSection';
+
+const ForYouSection = lazy(() => import('../ForYouSection'));
 
 const App = () => {
   const [currentWatchingType, setCurrentWatchingType] = useState(
@@ -36,9 +39,11 @@ const App = () => {
         <FollowingSection
           isHorizontalActive={currentWatchingType === WatchingType.Following}
         />
-        <ForYouSection
-          isHorizontalActive={currentWatchingType === WatchingType.ForYou}
-        />
+        <Suspense fallback={<Loading />}>
+          <ForYouSection
+            isHorizontalActive={currentWatchingType === WatchingType.ForYou}
+          />
+        </Suspense>
       </Scrollable>
       <HeaderActions
         currentWatchingType={currentWatchingType}

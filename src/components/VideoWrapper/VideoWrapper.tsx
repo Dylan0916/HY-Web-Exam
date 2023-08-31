@@ -6,8 +6,8 @@ import { ScrollDirection } from '@/types/common';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
+import Loading from '@/elements/Loading';
 import VideoPlayer from '@/elements/VideoPlayer';
-import Loading from './Loading';
 import Error from './Error';
 
 const scrollableOptions = { axis: 'y' as const };
