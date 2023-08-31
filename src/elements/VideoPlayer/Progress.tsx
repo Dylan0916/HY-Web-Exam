@@ -1,11 +1,4 @@
-import {
-  FC,
-  useState,
-  useEffect,
-  RefObject,
-  useDeferredValue,
-  TouchEvent,
-} from 'react';
+import { FC, useState, useEffect, RefObject, useDeferredValue } from 'react';
 import styled, { css } from 'styled-components';
 
 import useGlobalStore, { stateSelector } from '@/store/globalStore';
@@ -23,6 +16,15 @@ const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
     useGlobalStore(stateSelector);
   const { closeMute } = useMute();
 
+  const handleProgressPointMove = (x: number) => {
+    if (!isProgressBarMoving) return;
+
+    const pageX = Math.max(0, Math.min(x, window.innerWidth));
+    const ratio = pageX / window.innerWidth;
+
+    setVideoTimeRatio(ratio);
+  };
+
   const onTouchStart = () => {
     setIsProgressBarMoving(true);
     closeMute();
@@ -37,16 +39,6 @@ const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
 
       playerRef.current.currentTime = nextVideoTime;
     }
-  };
-
-  const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
-    const pageX = Math.max(
-      0,
-      Math.min(e?.touches?.[0]?.pageX, window.innerWidth)
-    );
-    const ratio = pageX / window.innerWidth;
-
-    setVideoTimeRatio(ratio);
   };
 
   useEffect(() => {
@@ -78,7 +70,10 @@ const Progress: FC<Props> = ({ isPlaying, playerRef }) => {
       <SFullProgressWrapper
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
-        onTouchMove={onTouchMove}
+        onTouchMove={e => handleProgressPointMove(e?.touches?.[0]?.pageX || 0)}
+        onMouseDown={onTouchStart}
+        onMouseUp={onTouchEnd}
+        onMouseMove={e => handleProgressPointMove(e?.clientX || 0)}
         $isProgressBarMoving={isProgressBarMoving}
       >
         <SFullProgressBar />

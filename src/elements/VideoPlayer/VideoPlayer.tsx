@@ -21,6 +21,7 @@ interface Props {
 const VideoPlayer: FC<Props> = ({ data, isActive }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasActivated, setHasActivated] = useState(isActive);
+  const [hasReady, setHasReady] = useState(false);
   const playerRef = useRef<HTMLVideoElement>(null);
   const isPausedByUserRef = useRef(false);
   const shouldMute = useGlobalStore(shouldMuteSelector);
@@ -44,6 +45,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
 
   const onReady = useCallback(() => {
     isActive && setIsPlaying(true);
+    setHasReady(true);
   }, [isActive]);
 
   const onScrollableSelect = useCallback(
@@ -90,14 +92,15 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
         playerRef={playerRef}
         src={hasActivated ? data.play_url : ''}
         loop
+        playsInline
         onClick={onClick}
-        onLoadedData={onReady}
+        onLoadedMetadata={onReady}
         muted={shouldMute}
       />
       <Progress isPlaying={isPlaying} playerRef={playerRef} />
       {shouldMute && <UnmuteButton playerRef={playerRef} />}
       {!isPlaying && <PauseUI onClick={onClick} />}
-      <CoverImg src={data.cover} name={data.title} show={!hasActivated} />
+      <CoverImg src={data.cover} name={data.title} show={!hasReady} />
     </>
   );
 };

@@ -27,6 +27,7 @@ const SUnmuteButton = styled.button`
   top: 15px;
   left: 10px;
   background-color: white;
+  color: black;
   border: none;
   border-radius: 3px;
   padding: 5px 25px;

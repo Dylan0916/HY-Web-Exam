@@ -5,8 +5,6 @@ import useEmblaCarousel, {
 } from 'embla-carousel-react';
 import styled from 'styled-components';
 
-import useMute from '@/hooks/useMute';
-
 interface Props {
   children: ReactNode;
   options?: EmblaOptionsType;
@@ -18,8 +16,7 @@ export type ScrollableRef = EmblaApi;
 
 const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
   const { children, options = {}, onSelect } = props;
-  const { closeMute } = useMute();
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ ...options, speed: 60 });
   const isVertical = options.axis === 'y';
 
   useImperativeHandle(ref, () => emblaApi, [emblaApi]);
@@ -42,7 +39,6 @@ const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
       }
     };
     const handleScroll = () => {
-      closeMute();
       preventEdgeScrolling();
     };
 
@@ -51,7 +47,7 @@ const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
     if (onSelect) {
       emblaApi.on('select', onSelect);
     }
-  }, [emblaApi, onSelect, closeMute]);
+  }, [emblaApi, onSelect]);
 
   return (
     <SEmbla ref={emblaRef}>
