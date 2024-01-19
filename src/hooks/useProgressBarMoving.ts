@@ -4,15 +4,15 @@ import { useUpdateEffect } from 'react-use';
 import useGlobalStore, {
   isProgressBarMovingSelector,
 } from '@/store/globalStore';
-import { ScrollableRef } from '@/elements/Scrollable';
+import { EmblaApi } from '@/elements/Scrollable';
 
-interface usePreventScrollingArgs {
-  scrollableRef: RefObject<ScrollableRef | undefined>;
+interface UsePreventScrollingArgs {
+  scrollableRef: RefObject<EmblaApi | undefined>;
 }
 
 export const usePreventScrolling = ({
   scrollableRef,
-}: usePreventScrollingArgs) => {
+}: UsePreventScrollingArgs) => {
   const isProgressBarMoving = useGlobalStore(isProgressBarMovingSelector);
 
   useUpdateEffect(() => {

@@ -59,9 +59,7 @@ const VideoPlayer: FC<Props> = ({ data, isActive }) => {
 
       if (isActive) {
         handleDelayedProcess(() => {
-          if (isScrollVertical) {
-            setIsPlaying(true);
-          } else if (!isPausedByUserRef.current) {
+          if (isScrollVertical || !isPausedByUserRef.current) {
             setIsPlaying(true);
           }
         }, VIDEO_PLAY_DELAY_MS);

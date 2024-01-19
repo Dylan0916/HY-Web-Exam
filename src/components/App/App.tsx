@@ -3,7 +3,7 @@ import { useUpdateEffect } from 'react-use';
 
 import { ScrollDirection, WatchingType } from '@/types/common';
 
-import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
+import Scrollable, { EmblaApi } from '@/elements/Scrollable';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
 import Loading from '@/elements/Loading';
@@ -16,7 +16,7 @@ const scrollableOptions = { startIndex };
 
 const App = () => {
   const [currentWatchingType, setCurrentWatchingType] = useState(startIndex);
-  const scrollableRef = useRef<ScrollableRef>(null);
+  const scrollableRef = useRef<EmblaApi>(null);
   const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
 
   const onScrollableSelect = useCallback(() => {

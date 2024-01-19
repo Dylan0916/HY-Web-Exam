@@ -12,9 +12,8 @@ interface Props {
 }
 
 export type EmblaApi = ReturnType<typeof useEmblaCarousel>[1];
-export type ScrollableRef = EmblaApi;
 
-const Scrollable = forwardRef<ScrollableRef, Props>((props, ref) => {
+const Scrollable = forwardRef<EmblaApi, Props>((props, ref) => {
   const { children, options = {}, onSelect } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel({ ...options, speed: 60 });
   const isVertical = options.axis === 'y';

@@ -5,10 +5,10 @@ import { Item } from '@/types/list';
 import { ScrollDirection } from '@/types/common';
 import { usePublish, SCROLL_DIRECTION } from '@/hooks/usePubSub';
 import { usePreventScrolling } from '@/hooks/useProgressBarMoving';
-import Scrollable, { ScrollableRef } from '@/elements/Scrollable';
+import Scrollable, { EmblaApi } from '@/elements/Scrollable';
 import Loading from '@/elements/Loading';
 import VideoPlayer from '@/elements/VideoPlayer';
-import Error from './Error';
+import ErrorView from './ErrorView';
 
 const scrollableOptions = { axis: 'y' as const };
 
@@ -26,7 +26,7 @@ const VideoWrapper: FC<Props> = ({
   data = [],
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const scrollableRef = useRef<ScrollableRef>(null);
+  const scrollableRef = useRef<EmblaApi>(null);
   const scrollDirectionPublisher = usePublish(SCROLL_DIRECTION);
 
   const onScrollableSelect = useCallback(() => {
@@ -37,7 +37,7 @@ const VideoWrapper: FC<Props> = ({
   usePreventScrolling({ scrollableRef });
 
   if (isLoading) return <Loading />;
-  if (error) return <Error />;
+  if (error) return <ErrorView />;
 
   return (
     <SVideoContainer>

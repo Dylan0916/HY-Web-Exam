@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Error = () => {
+const ErrorView = () => {
   const onClick = () => {
     location.reload();
   };
@@ -16,7 +16,7 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default ErrorView;
 
 const SContainer = styled.div`
   flex: 0 0 100%;
